@@ -1,1 +1,1 @@
-# SeamPainter: Learning to Paintaround Cutting Seam for Image Stitching
+# SeamPainter: Learning to Paint around Cutting Seam for Image Stitching
