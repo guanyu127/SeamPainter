@@ -1,7 +1,7 @@
 # SeamPainter: Learning to Paint around Cutting Seam for Image Stitching
 <p align="center">
-  <a href="assets/SeamPainter.pdf">
-    <img src="assets/SeamPainter.png" alt="SeamPainter framework" width="100%">
+  <a href="assets/first.pdf">
+    <img src="assets/first.png" alt="SeamPainter" width="100%">
   </a>
 </p>
 
