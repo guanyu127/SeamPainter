@@ -78,8 +78,3 @@ provided in [`tools/prepare_inputs/`](tools/prepare_inputs/). The samples in
 This project is built with
 [DiffSynth-Studio](https://github.com/modelscope/DiffSynth-Studio), Qwen-Image,
 and Qwen-Image Blockwise ControlNet Inpaint.
-
-## License and citation
-
-The code is released under the Apache License 2.0. See
-[`CITATION.cff`](CITATION.cff) for citation information.
