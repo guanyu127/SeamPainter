@@ -5,8 +5,6 @@
   </a>
 </p>
 
-Official implementation of **SeamPainter: Learning to Paint around Cutting Seam for Image Stitching**.
-
 SeamPainter takes a seam-cutting result, an expanded seam mask, and an expanded
 seam-quality mask as input, then generates the refined stitching result.
 
