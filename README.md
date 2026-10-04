@@ -5,9 +5,6 @@
   </a>
 </p>
 
-# SeamPainter
-
-
 SeamPainter takes a seam-cutting result, an expanded seam mask, and an expanded
 seam-quality mask as input, then generates the refined stitching result.
 
