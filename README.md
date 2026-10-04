@@ -30,6 +30,10 @@ Blockwise ControlNet model are downloaded by DiffSynth on first use.
 
 The SeamPainter model checkpoint is available at [Link](MODEL_LINK).
 
+## Dataset
+
+The SeamPainter training dataset is available at [Link](DATASET_LINK).
+
 ## Inference
 
 Each example contains:
