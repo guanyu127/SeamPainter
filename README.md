@@ -25,7 +25,7 @@ Blockwise ControlNet model are downloaded by DiffSynth on first use.
 
 ## Model
 
-The SeamPainter model checkpoint is available at [Link](MODEL_LINK).
+The SeamPainter model checkpoint is available at [Baidu Netdisk](https://pan.baidu.com/s/1QUX6AOGSbLbZpXK6TD_g_w?pwd=q95b). Extraction code: `q95b`.
 
 ## Dataset
 
