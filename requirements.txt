@@ -1,0 +1,9 @@
+# Install a CUDA-compatible PyTorch build separately before this file.
+diffsynth==1.1.9
+accelerate>=1.2
+safetensors>=0.4
+numpy==1.26.4
+Pillow>=10.0
+opencv-python>=4.8
+tqdm>=4.66
+PyMaxflow>=1.3
