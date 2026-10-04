@@ -11,21 +11,28 @@ seam-quality mask as input, then generates the refined stitching result.
 ## Installation
 
 Python 3.10 or 3.11 is recommended. Install a CUDA-compatible PyTorch build
-first, then install the remaining dependencies:
+first. The Qwen-Image and FLUX.2 implementations use different DiffSynth
+versions and should be installed in separate environments.
+
+Qwen-Image environment:
 
 ```bash
 git clone <repository-url>
 cd SeamPainter
 pip install -r requirements.txt
-pip install -e .
 ```
 
-The code is tested against `diffsynth==1.1.9`. The Qwen-Image base model and
-Blockwise ControlNet model are downloaded by DiffSynth on first use.
+FLUX.2 environment:
+
+```bash
+pip install -r requirements-flux2.txt
+```
 
 ## Model
 
-The SeamPainter model checkpoint is available at [Baidu Netdisk](https://pan.baidu.com/s/1QUX6AOGSbLbZpXK6TD_g_w?pwd=q95b). Extraction code: `q95b`.
+The Qwen-Image SeamPainter checkpoint is available at [Baidu Netdisk](https://pan.baidu.com/s/1QUX6AOGSbLbZpXK6TD_g_w?pwd=q95b). Extraction code: `q95b`.
+
+The FLUX.2 SeamPainter LoRA checkpoint is available at [Baidu Netdisk](https://pan.baidu.com/s/1RhONjZq0dyRbnsFTx22kCg?pwd=g6sx). Extraction code: `g6sx`.
 
 ## Dataset
 
@@ -42,21 +49,35 @@ sample_xxx/
 └── seam_quality_mask.jpg
 ```
 
-Set `LORA_PATH` in `scripts/run_examples.sh`, then run:
+Qwen-Image: set `LORA_PATH` in `scripts/run_examples.sh`, then run:
 
 ```bash
 bash scripts/run_examples.sh
 ```
 
-Results are saved in `outputs/`.
+FLUX.2: set `LORA_PATH` in `scripts/run_flux2_examples.sh`, then run:
+
+```bash
+bash scripts/run_flux2_examples.sh
+```
+
+Results are saved in `outputs/` and `outputs_flux2/`, respectively.
 
 ## Training
 
-Set the dataset and output paths at the top of `scripts/train_lora.sh`, then run:
+Qwen-Image:
 
 ```bash
 bash scripts/train_lora.sh
 ```
+
+FLUX.2:
+
+```bash
+bash scripts/train_flux2_lora.sh
+```
+
+Set the dataset and output paths at the top of the corresponding script.
 
 ## Data preparation
 
@@ -79,3 +100,5 @@ provided in [`tools/prepare_inputs/`](tools/prepare_inputs/). The samples in
 This project is built with
 [DiffSynth-Studio](https://github.com/modelscope/DiffSynth-Studio), Qwen-Image,
 and Qwen-Image Blockwise ControlNet Inpaint.
+The FLUX.2 implementation uses FLUX.2 Klein through DiffSynth-Studio.
+
