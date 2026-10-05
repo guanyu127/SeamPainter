@@ -36,7 +36,7 @@ The FLUX.2 SeamPainter LoRA checkpoint is available at [Baidu Netdisk](https://p
 
 ## Dataset
 
-The SeamPainter training dataset is available at [Link](DATASET_LINK).
+The SeamPainter dataset is available at [Baidu Netdisk](https://pan.baidu.com/s/1Yq3gWj8W1MC3iw1Ww_BRTQ?pwd=c21y). Extraction code: `c21y`.
 
 ## Inference
 
