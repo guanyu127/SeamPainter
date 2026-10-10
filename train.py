@@ -14,6 +14,7 @@ from diffsynth.trainers.utils import (
     qwen_image_parser,
 )
 
+from seampainter.augmentation import maybe_rotate_aligned_90, validate_probability
 from seampainter.controlnet import (
     SeamPainterControlNetInput,
     install_seampainter_controlnet_unit,
@@ -44,6 +45,8 @@ class SeamPainterTrainingModule(DiffusionTrainingModule):
         seam_feature_scale=1.003,
         quality_feature_scale=1.006,
         quality_loss_weight=1.1,
+        random_rotate_90=False,
+        random_rotate_90_probability=0.5,
     ):
         super().__init__()
         model_configs = self.parse_model_configs(
@@ -81,12 +84,21 @@ class SeamPainterTrainingModule(DiffusionTrainingModule):
         self.use_gradient_checkpointing_offload = use_gradient_checkpointing_offload
         self.task = task
         self.quality_loss_weight = float(quality_loss_weight)
+        self.random_rotate_90 = bool(random_rotate_90)
+        self.random_rotate_90_probability = validate_probability(
+            random_rotate_90_probability
+        )
 
     def forward_preprocess(self, data):
         gt_image = data["image"]
         condition_image = data["blockwise_controlnet_image"]
         seam_mask = data["blockwise_controlnet_inpaint_mask"]
         quality_mask = data["seam_quality_mask"]
+        gt_image, condition_image, seam_mask, quality_mask = maybe_rotate_aligned_90(
+            (gt_image, condition_image, seam_mask, quality_mask),
+            enabled=self.random_rotate_90,
+            probability=self.random_rotate_90_probability,
+        )
 
         inputs_posi = {"prompt": data["prompt"]}
         inputs_nega = {"negative_prompt": ""}
@@ -166,7 +178,9 @@ def parse_args():
     )
     parser.add_argument("--seam_feature_scale", type=float, default=1.05)
     parser.add_argument("--quality_feature_scale", type=float, default=1.10)
-    parser.add_argument("--quality_loss_weight", type=float, default=1.5)
+    parser.add_argument("--quality_loss_weight", type=float, default=2.0)
+    parser.add_argument("--random_rotate_90", action="store_true")
+    parser.add_argument("--random_rotate_90_probability", type=float, default=0.5)
     return parser.parse_args()
 
 
@@ -202,6 +216,8 @@ def main():
         seam_feature_scale=args.seam_feature_scale,
         quality_feature_scale=args.quality_feature_scale,
         quality_loss_weight=args.quality_loss_weight,
+        random_rotate_90=args.random_rotate_90,
+        random_rotate_90_probability=args.random_rotate_90_probability,
     )
     logger = ModelLogger(
         args.output_path,

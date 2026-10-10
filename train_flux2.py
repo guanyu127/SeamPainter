@@ -143,6 +143,8 @@ def build_parser():
         "--mask_token_scale", type=float, default=DEFAULT_MASK_TOKEN_SCALE
     )
     parser.add_argument("--random_horizontal_flip", action="store_true")
+    parser.add_argument("--random_rotate_90", action="store_true")
+    parser.add_argument("--random_rotate_90_probability", type=float, default=0.5)
     parser.add_argument("--augment_seed", type=int, default=20260904)
     parser.add_argument("--validation_steps", type=int, default=200)
     parser.add_argument("--eval_loss_samples", type=int, default=8)
@@ -180,6 +182,8 @@ def main():
         metadata,
         repeat=args.dataset_repeat,
         random_horizontal_flip=args.random_horizontal_flip,
+        random_rotate_90=args.random_rotate_90,
+        random_rotate_90_probability=args.random_rotate_90_probability,
         augment_seed=args.augment_seed,
         **dataset_args,
     )
