@@ -10,6 +10,8 @@ from pathlib import Path
 from PIL import Image, ImageOps
 from torch.utils.data import Dataset
 
+from seampainter.augmentation import maybe_rotate_aligned_90, validate_probability
+
 from .constants import DEFAULT_PROMPT
 from .masks import normalize_mask_pair
 
@@ -31,6 +33,8 @@ class SeamPainterFlux2Dataset(Dataset):
         height: int | None = None,
         width: int | None = None,
         random_horizontal_flip: bool = False,
+        random_rotate_90: bool = False,
+        random_rotate_90_probability: float = 0.5,
         augment_seed: int = 20260904,
         require_target: bool = True,
         skip_empty_masks: bool = True,
@@ -52,6 +56,10 @@ class SeamPainterFlux2Dataset(Dataset):
         self.height = height
         self.width = width
         self.random_horizontal_flip = bool(random_horizontal_flip)
+        self.random_rotate_90 = bool(random_rotate_90)
+        self.random_rotate_90_probability = validate_probability(
+            random_rotate_90_probability
+        )
         self.augment_seed = int(augment_seed)
         self.require_target = bool(require_target)
         self.indices = list(range(len(self.records)))
@@ -161,6 +169,14 @@ class SeamPainterFlux2Dataset(Dataset):
             quality_mask = ImageOps.mirror(quality_mask)
             if target is not None:
                 target = ImageOps.mirror(target)
+
+        input_image, edit_image, seam_mask, quality_mask, target = (
+            maybe_rotate_aligned_90(
+                (input_image, edit_image, seam_mask, quality_mask, target),
+                enabled=self.random_rotate_90,
+                probability=self.random_rotate_90_probability,
+            )
+        )
 
         sample_id = Path(input_path).stem or f"{record_index:05d}"
         return {
