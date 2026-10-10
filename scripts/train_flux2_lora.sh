@@ -5,6 +5,14 @@ set -euo pipefail
 DATASET_ROOT="/path/to/seampainter_dataset"
 OUTPUT_ROOT="checkpoints/seampainter-flux2-lora"
 LORA_TARGETS="to_q,to_k,to_v,to_out.0,add_q_proj,add_k_proj,add_v_proj,to_add_out,linear_in,linear_out,to_qkv_mlp_proj,single_transformer_blocks.0.attn.to_out,single_transformer_blocks.1.attn.to_out,single_transformer_blocks.2.attn.to_out,single_transformer_blocks.3.attn.to_out,single_transformer_blocks.4.attn.to_out,single_transformer_blocks.5.attn.to_out,single_transformer_blocks.6.attn.to_out,single_transformer_blocks.7.attn.to_out,single_transformer_blocks.8.attn.to_out,single_transformer_blocks.9.attn.to_out,single_transformer_blocks.10.attn.to_out,single_transformer_blocks.11.attn.to_out,single_transformer_blocks.12.attn.to_out,single_transformer_blocks.13.attn.to_out,single_transformer_blocks.14.attn.to_out,single_transformer_blocks.15.attn.to_out,single_transformer_blocks.16.attn.to_out,single_transformer_blocks.17.attn.to_out,single_transformer_blocks.18.attn.to_out,single_transformer_blocks.19.attn.to_out"
+ENABLE_RANDOM_ROTATE_90=false
+RANDOM_ROTATE_90_PROBABILITY=0.5
+
+ROTATE_ARGS=()
+if [[ "${ENABLE_RANDOM_ROTATE_90}" == "true" ]]; then
+  ROTATE_ARGS+=(--random_rotate_90)
+  ROTATE_ARGS+=(--random_rotate_90_probability "${RANDOM_ROTATE_90_PROBABILITY}")
+fi
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${ROOT_DIR}"
@@ -29,4 +37,5 @@ accelerate launch train_flux2.py \
   --mask_token_scale 1.0 \
   --use_gradient_checkpointing \
   --random_horizontal_flip \
+  "${ROTATE_ARGS[@]}" \
   --find_unused_parameters

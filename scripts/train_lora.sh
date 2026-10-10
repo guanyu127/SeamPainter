@@ -3,6 +3,14 @@ set -euo pipefail
 
 DATASET_ROOT="${1:-data/example_image_dataset}"
 OUTPUT_ROOT="${2:-checkpoints/seampainter-lora}"
+ENABLE_RANDOM_ROTATE_90=false
+RANDOM_ROTATE_90_PROBABILITY=0.5
+
+ROTATE_ARGS=()
+if [[ "${ENABLE_RANDOM_ROTATE_90}" == "true" ]]; then
+  ROTATE_ARGS+=(--random_rotate_90)
+  ROTATE_ARGS+=(--random_rotate_90_probability "${RANDOM_ROTATE_90_PROBABILITY}")
+fi
 
 accelerate launch train.py \
   --dataset_base_path "${DATASET_ROOT}" \
@@ -21,5 +29,6 @@ accelerate launch train.py \
   --seam_feature_scale 1.05 \
   --quality_feature_scale 1.10 \
   --quality_loss_weight 1.5 \
+  "${ROTATE_ARGS[@]}" \
   --use_gradient_checkpointing \
   --find_unused_parameters
