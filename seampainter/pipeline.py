@@ -6,7 +6,6 @@ from diffsynth.pipelines.qwen_image import ModelConfig, QwenImagePipeline
 
 from .constants import (
     DEFAULT_CONTROLNET_MODEL,
-    DEFAULT_MASK_THRESHOLD,
     DEFAULT_QUALITY_FEATURE_SCALE,
     DEFAULT_QWEN_MODEL,
     DEFAULT_SEAM_FEATURE_SCALE,
@@ -47,7 +46,6 @@ def create_pipeline(
     lora_path: str | None = None,
     seam_feature_scale: float = DEFAULT_SEAM_FEATURE_SCALE,
     quality_feature_scale: float = DEFAULT_QUALITY_FEATURE_SCALE,
-    mask_threshold: float = DEFAULT_MASK_THRESHOLD,
 ):
     pipe = QwenImagePipeline.from_pretrained(
         torch_dtype=dtype,
@@ -62,7 +60,6 @@ def create_pipeline(
         pipe,
         seam_feature_scale=seam_feature_scale,
         quality_feature_scale=quality_feature_scale,
-        mask_threshold=mask_threshold,
     )
     if lora_path is not None:
         pipe.load_lora(pipe.dit, lora_path)

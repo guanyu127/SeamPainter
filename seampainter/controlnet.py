@@ -8,7 +8,6 @@ from diffsynth.pipelines.flux_image_new import ControlNetInput
 from diffsynth.pipelines.qwen_image import QwenImageUnit_BlockwiseControlNet
 
 from .constants import (
-    DEFAULT_MASK_THRESHOLD,
     DEFAULT_QUALITY_FEATURE_SCALE,
     DEFAULT_SEAM_FEATURE_SCALE,
 )
@@ -35,14 +34,12 @@ class SeamPainterBlockwiseControlNetUnit(QwenImageUnit_BlockwiseControlNet):
         self,
         seam_feature_scale: float = DEFAULT_SEAM_FEATURE_SCALE,
         quality_feature_scale: float = DEFAULT_QUALITY_FEATURE_SCALE,
-        mask_threshold: float = DEFAULT_MASK_THRESHOLD,
     ) -> None:
         super().__init__()
         if seam_feature_scale < 0 or quality_feature_scale < 0:
             raise ValueError("Feature scales must be non-negative.")
         self.seam_feature_scale = float(seam_feature_scale)
         self.quality_feature_scale = float(quality_feature_scale)
-        self.mask_threshold = float(mask_threshold)
 
     def apply_controlnet_mask_on_image(self, pipe, image, mask):
         """Return the complete image; SeamPainter never clears masked pixels."""
@@ -60,7 +57,6 @@ class SeamPainterBlockwiseControlNetUnit(QwenImageUnit_BlockwiseControlNet):
             latent.shape[-2:],
             device=latent.device,
             dtype=latent.dtype,
-            threshold=self.mask_threshold,
         )
         if quality_mask is None:
             quality_tensor = seam_tensor.new_zeros(seam_tensor.shape)
@@ -70,7 +66,6 @@ class SeamPainterBlockwiseControlNetUnit(QwenImageUnit_BlockwiseControlNet):
                 latent.shape[-2:],
                 device=latent.device,
                 dtype=latent.dtype,
-                threshold=self.mask_threshold,
             )
         weight, _, _ = build_feature_weight(
             seam_tensor,
@@ -78,7 +73,6 @@ class SeamPainterBlockwiseControlNetUnit(QwenImageUnit_BlockwiseControlNet):
             latent,
             seam_scale=self.seam_feature_scale,
             quality_scale=self.quality_feature_scale,
-            threshold=self.mask_threshold,
         )
         return latent * weight
 
@@ -119,13 +113,11 @@ def install_seampainter_controlnet_unit(
     pipe,
     seam_feature_scale: float = DEFAULT_SEAM_FEATURE_SCALE,
     quality_feature_scale: float = DEFAULT_QUALITY_FEATURE_SCALE,
-    mask_threshold: float = DEFAULT_MASK_THRESHOLD,
 ):
     """Replace DiffSynth's official blockwise preprocessing unit in-place."""
     replacement = SeamPainterBlockwiseControlNetUnit(
         seam_feature_scale=seam_feature_scale,
         quality_feature_scale=quality_feature_scale,
-        mask_threshold=mask_threshold,
     )
     replaced = 0
     for index, unit in enumerate(pipe.units):
