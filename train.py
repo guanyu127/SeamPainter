@@ -169,9 +169,9 @@ def parse_args():
             "blockwise_controlnet_inpaint_mask,seam_quality_mask"
         )
     )
-    parser.add_argument("--seam_feature_scale", type=float, default=1.003)
-    parser.add_argument("--quality_feature_scale", type=float, default=1.006)
-    parser.add_argument("--quality_loss_weight", type=float, default=1.1)
+    parser.add_argument("--seam_feature_scale", type=float, default=1.05)
+    parser.add_argument("--quality_feature_scale", type=float, default=1.10)
+    parser.add_argument("--quality_loss_weight", type=float, default=2.0)
     parser.add_argument("--mask_threshold", type=float, default=0.1)
     return parser.parse_args()
 
