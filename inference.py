@@ -122,9 +122,8 @@ def parse_args():
     parser.add_argument("--seed", type=int, default=123)
     parser.add_argument("--cfg-scale", type=float, default=1.0)
     parser.add_argument("--denoising-strength", type=float, default=1.0)
-    parser.add_argument("--seam-feature-scale", type=float, default=1.05)
-    parser.add_argument("--quality-feature-scale", type=float, default=1.10)
-    parser.add_argument("--mask-threshold", type=float, default=0.1)
+    parser.add_argument("--seam-feature-scale", type=float, default=1.003)
+    parser.add_argument("--quality-feature-scale", type=float, default=1.006)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--save-debug-grid", action="store_true")
     return parser.parse_args()
@@ -140,7 +139,6 @@ def main() -> None:
         lora_path=args.lora_path,
         seam_feature_scale=args.seam_feature_scale,
         quality_feature_scale=args.quality_feature_scale,
-        mask_threshold=args.mask_threshold,
     )
 
     if args.input is not None:

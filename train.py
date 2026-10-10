@@ -44,7 +44,6 @@ class SeamPainterTrainingModule(DiffusionTrainingModule):
         seam_feature_scale=1.003,
         quality_feature_scale=1.006,
         quality_loss_weight=1.1,
-        mask_threshold=0.1,
     ):
         super().__init__()
         model_configs = self.parse_model_configs(
@@ -68,7 +67,6 @@ class SeamPainterTrainingModule(DiffusionTrainingModule):
             self.pipe,
             seam_feature_scale=seam_feature_scale,
             quality_feature_scale=quality_feature_scale,
-            mask_threshold=mask_threshold,
         )
         self.switch_pipe_to_training_mode(
             self.pipe,
@@ -83,7 +81,6 @@ class SeamPainterTrainingModule(DiffusionTrainingModule):
         self.use_gradient_checkpointing_offload = use_gradient_checkpointing_offload
         self.task = task
         self.quality_loss_weight = float(quality_loss_weight)
-        self.mask_threshold = float(mask_threshold)
 
     def forward_preprocess(self, data):
         gt_image = data["image"]
@@ -129,7 +126,6 @@ class SeamPainterTrainingModule(DiffusionTrainingModule):
             latent.shape[-2:],
             device=latent.device,
             dtype=latent.dtype,
-            threshold=self.mask_threshold,
         )
         return {**inputs_shared, **inputs_posi}
 
@@ -154,7 +150,6 @@ class SeamPainterTrainingModule(DiffusionTrainingModule):
                 inputs,
                 models,
                 quality_weight=self.quality_loss_weight,
-                threshold=self.mask_threshold,
             )
         if self.task == "data_process":
             return inputs
@@ -171,8 +166,7 @@ def parse_args():
     )
     parser.add_argument("--seam_feature_scale", type=float, default=1.05)
     parser.add_argument("--quality_feature_scale", type=float, default=1.10)
-    parser.add_argument("--quality_loss_weight", type=float, default=2.0)
-    parser.add_argument("--mask_threshold", type=float, default=0.1)
+    parser.add_argument("--quality_loss_weight", type=float, default=1.5)
     return parser.parse_args()
 
 
@@ -208,7 +202,6 @@ def main():
         seam_feature_scale=args.seam_feature_scale,
         quality_feature_scale=args.quality_feature_scale,
         quality_loss_weight=args.quality_loss_weight,
-        mask_threshold=args.mask_threshold,
     )
     logger = ModelLogger(
         args.output_path,
